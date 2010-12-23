@@ -1,0 +1,24 @@
+html {
+	font-family: arial;
+}
+
+body {
+	width: 960px;
+	margin: 0 auto;
+}
+
+.placeholder {
+	border: 2px #707070 dashed;
+	height: 50px;
+	margin-bottom: 30px;
+}
+
+ul ul {
+	margin-left: 30px;
+}
+
+li p {
+	padding: 10px;
+	margin: 10px 0px;
+	background-color: grey;
+}
