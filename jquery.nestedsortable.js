@@ -12,7 +12,8 @@ $.fn.nestedSortable = function(settings) {
         start: function() {},
         stop: function() {},
         drag: function() {},
-        maxDepth: null
+        maxDepth: null,
+		disableSelect: true
     }, settings);
 
     settings.snapTolerance = settings.indent * 0.4;
@@ -65,6 +66,15 @@ $.fn.nestedSortable = function(settings) {
                             }
                         });
                         $this.data("maxChildDepth", maxChildDepth);
+
+						if (settings.disableSelect) {
+							$("html").css({
+								"-moz-user-select": "none",
+								"-khtml-user-select": "none",
+								"-webkit-user-select": "none",
+								"user-select": "none"
+							});
+						}
 
                         // Run a custom start function specitifed in the settings
                         settings.start.apply(this);
@@ -142,8 +152,19 @@ $.fn.nestedSortable = function(settings) {
 
 					// When dragging ends
                     stop: function(event, ui) {
+	
                         // Replace the placeholder with the original
                         $placeholder.after($this.show()).remove();
+
+						if (settings.disableSelect) {
+							$("html").css({
+								"-moz-user-select": "",
+								"-khtml-user-select": "",
+								"-webkit-user-select": "",
+								"user-select": ""
+							});
+						}
+
                         // Run a custom stop function specitifed in the settings
                         settings.stop.apply(this);
                     }
