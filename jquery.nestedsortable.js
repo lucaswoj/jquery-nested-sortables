@@ -57,15 +57,17 @@ $.fn.nestedSortable = function(settings) {
                         $this.hide().after($placeholder);
 
                         // Find the depth of the deepest nested child and cache it for later
-                        var maxChildDepth = 0;
-                        $this.find(settings.nestable).each(function(index, child) {
-                            var $child = $(child);
-                            var childDepth = $child.parentsUntil($this).filter(settings.nestable).length;
-                            if (childDepth > maxChildDepth) {
-                                maxChildDepth = childDepth;
-                            }
-                        });
-                        $this.data("maxChildDepth", maxChildDepth);
+						if (settings.maxDepth) {
+                        	var maxChildDepth = 0;
+	                        $this.find(settings.nestable).each(function(index, child) {
+	                            var $child = $(child);
+	                            var childDepth = $child.parentsUntil($this).filter(settings.nestable).length;
+	                            if (childDepth > maxChildDepth) {
+	                                maxChildDepth = childDepth;
+	                            }
+	                        });
+	                        $this.data("maxChildDepth", maxChildDepth);
+						}
 
 						// Disable text selection
 						if (settings.disableSelect) {
@@ -93,11 +95,11 @@ $.fn.nestedSortable = function(settings) {
 						// Cycle through all nestables in this nested list looking for the one directly under the helper
                         $root.find(settings.nestable).each(function(index, item) {
 
-                            $item = $(item);
-							itemOffset = $item.offset();
+                            var $item = $(item);
+							var itemOffset = $item.offset();
 
                             // Is the item being checked below the one being dragged and above the previous lowest element?
-                            if (!((itemOffset.top < ui.position.top) && (itemOffset.top > largestY)))
+                            if (!((itemOffset.top > largestY) && (itemOffset.top < ui.position.top)))
                                 return;
 
                             // Is the item being checked on the right nesting level for the dragged item's horizantal position?
@@ -137,7 +139,7 @@ $.fn.nestedSortable = function(settings) {
                         } else {
 
                             // Should the dragged item be nested?
-                            if (($underItem.offset().left + settings.indent - settings.snapTolerance < ui.position.left) && (settings.maxDepth === null || depth < settings.maxDepth)) {
+                            if (($underItem.offset().left + settings.indent - settings.snapTolerance < ui.position.left) && (!settings.maxDepth || depth < settings.maxDepth)) {
                                 $underItem.children(settings.container).prepend($placeholder);
 
                                 // … or should it just be placed after
