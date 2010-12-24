@@ -1,0 +1,26 @@
+Working on a recent project, I needed a jQuery plugin that would me to visually rearrange a hierarchy of HTML elements. Although I did find a couple possible solutions in the jQuery plugin directory, all the existing solutions made the nesting algorithm extremely jumpy and temperamental. I did, however, stumble across a plugin written for the deprecated jQuery Interface <http://interface.eyecon.ro/> library called Nested Sortables <http://code.google.com/p/nestedsortables/>. This plugin had the exact behavior I was looking for — nested sortables with a threshold that kept the nesting very smooth. Unfortunately, the outdated library which this code relied on made it an inelegant solutoin. Over a weekend, I decided to port the module over to jQuery UI, a process which eventually led me to rewrite everything except for the nesting algorithm itself. Although I took out many of the old plugin’s features in the process (namely, RTL support), the final product is very stable and lightweight. In hopes that someone else might find the code useful, here it is:
+
+The options you must pass to this plugin are:
+indent: (default: 30) – The horizontal distance (in px) between levels of child nestables, usually the “margin-left” or “padding-left” of the lists which contain the child elements. (I'm working towards making this automatic)
+
+The options you may pass to this plugin are:
+nestable: (default: ‘li’) – A selector which identifies the draggable and nestable elements within the list
+container: (default: ‘ul’) – Each “nestable” element must have a container inside it for accepting children. This selector identifies that sub-list
+start: A function to run on when dragging begins
+stop: A function to run when the dragging ends
+drag: A function to run at each movement of the mouse
+handle: – A selector identifying a drag handle
+opacity: (default: 1) – The opacity of the dragged element’s helper
+placeholderClass: (default: ‘placeholder’) – The class of the placeholder – the temporary element created to show the final position of the helper as you drag it across the list.
+maxDepth: (default: null) – The maximum depth at which items can be nested.
+
+The HTML must be set up like this for the plugin to work:
+
+<ul>
+ 	<li>
+		<p>List Item Content</p>
+		<ul></ul>
+	</li>
+</ul>
+
+And there are some CSS prerequisites. Check out the demo if you're having trouble -- it can be a little touchy at times.
