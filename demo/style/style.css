@@ -10,7 +10,7 @@ body {
 .placeholder {
 	border: 2px #707070 dashed;
 	height: 50px;
-	margin-bottom: 30px;
+	margin-bottom: 10px;
 }
 
 ul ul {
@@ -18,7 +18,7 @@ ul ul {
 }
 
 li p {
-	padding: 10px;
-	margin: 10px 0px;
+	padding: 15px 20px;
+	margin: 20px 0px;
 	background-color: grey;
 }
