@@ -67,6 +67,7 @@ $.fn.nestedSortable = function(settings) {
                         });
                         $this.data("maxChildDepth", maxChildDepth);
 
+						// Disable text selection
 						if (settings.disableSelect) {
 							$("html").css({
 								"-moz-user-select": "none",
@@ -86,17 +87,17 @@ $.fn.nestedSortable = function(settings) {
 
                         var largestY = 0;
                         var depth;
-						var underItem;
+						var $underItem = [];
                         var maxChildDepth = $this.data("maxChildDepth");
 
 						// Cycle through all nestables in this nested list looking for the one directly under the helper
-                        $root.find(settings.nestable).each(function(item) {
+                        $root.find(settings.nestable).each(function(index, item) {
 
                             $item = $(item);
 							itemOffset = $item.offset();
 
                             // Is the item being checked below the one being dragged and above the previous lowest element?
-                            if (! ((itemOffset.top < ui.position.top) && (itemOffset.top > largestY)))
+                            if (!((itemOffset.top < ui.position.top) && (itemOffset.top > largestY)))
                                 return;
 
                             // Is the item being checked on the right nesting level for the dragged item's horizantal position?
@@ -110,25 +111,25 @@ $.fn.nestedSortable = function(settings) {
                             // Does this item comply with max depth rules?
                             if (settings.maxDepth) {
                                 depth = $item.parentsUntil($root).filter(settings.container).length + maxChildDepth;
-                                if (depth - 1 > settings.maxDepth) {
+                                if (depth > settings.maxDepth) {
                                     return;
                                 }
                             }
 
                             // If we've got this far, its a match
                             largestY = itemOffset.top;
-							underItem = item;
+							$underItem = $item;
 
                         });
 
                         // If there is no underItem, check if we should place the dragged item at the beginning of the list
-                        if (!underItem) {
+                        if (!$underItem.length) {
 
 							// Find the first nestable
-                            var firstItem = $root.find(settings.nestable + ":first");
+                            var $firstItem = $root.find(settings.nestable + ":first");
 
 							// Check if the positioning looks good. If so, put the placeholder in position
-                            if ((firstItem.offset().top < ui.position.top + $(this).height()) && (firstItem.offset().top > ui.position.top)) {
+                            if (($firstItem.offset().top < ui.position.top + $(this).height()) && ($firstItem.offset().top > ui.position.top)) {
                                 $root.prepend($placeholder);
                             }
 
@@ -136,12 +137,12 @@ $.fn.nestedSortable = function(settings) {
                         } else {
 
                             // Should the dragged item be nested?
-                            if ((underItem.offset().left + settings.indent - settings.snapTolerance < ui.position.left) && (settings.maxDepth === null || depth < settings.maxDepth)) {
-                                underItem.children(settings.container).prepend($placeholder);
+                            if (($underItem.offset().left + settings.indent - settings.snapTolerance < ui.position.left) && (settings.maxDepth === null || depth < settings.maxDepth)) {
+                                $underItem.children(settings.container).prepend($placeholder);
 
                                 // … or should it just be placed after
                             } else {
-                                underItem.after($placeholder);
+                                $underItem.after($placeholder);
                             }
                         }
 
@@ -156,6 +157,7 @@ $.fn.nestedSortable = function(settings) {
                         // Replace the placeholder with the original
                         $placeholder.after($this.show()).remove();
 
+						// Re-enable text selection
 						if (settings.disableSelect) {
 							$("html").css({
 								"-moz-user-select": "",
