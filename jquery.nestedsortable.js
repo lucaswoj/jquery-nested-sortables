@@ -33,6 +33,7 @@ $.fn.nestedSortable = function(settings) {
 
 			// $this will point to the targeted nestable
             var $this = $(this);
+			var maxChildDepth = 0;
 
             // Check if the element has already been set up as a nestable
             if (!$this.data("nestable")) {
@@ -53,27 +54,16 @@ $.fn.nestedSortable = function(settings) {
                     // When dragging starts
                     start: function() {
 
-                        // Find the depth of the deepest nested child and cache it for later
+                        // Find the depth of the deepest nested child
 						if (settings.maxDepth) {
-                        	var maxChildDepth = 0;
-	                        $this.find(settings.nestable).each(function(index, child) {
-		
-	                            var $child = $(child);
-	                            var childDepth = 0;
-	
-								$child.parents(settings.nestable).each(function(index, item) {
-									childDepth++;
-									return (item != $this[0]);
-								});
-								
-	                            if (childDepth > maxChildDepth) {
-	                                maxChildDepth = childDepth;
-	                            }
-	
-	                        });
-	
-	                        $this.data("maxChildDepth", maxChildDepth);
-						}						
+							$next = $this.children().find(settings.nestable);
+							while($next.length) {
+								$next = $next.find(settings.nestable);
+								maxChildDepth++;
+							}
+						}
+						
+						console.log("Max Child Depth: " + maxChildDepth);				
 						
 						// Hide the original and initialize the placeholder on top of the starting position
                         $this.hide().after($placeholder);
@@ -99,7 +89,6 @@ $.fn.nestedSortable = function(settings) {
                         var largestY = 0;
                         var depth;
 						var $underItem = [];
-                        var maxChildDepth = $this.data("maxChildDepth");
 
 						// Cycle through all nestables in this nested list looking for the one directly under the helper
                         $root.find(settings.nestable).each(function(index, item) {
