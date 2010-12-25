@@ -53,21 +53,27 @@ $.fn.nestedSortable = function(settings) {
                     // When dragging starts
                     start: function() {
 
-                        // Hide the original and initialize the placeholder on top of the starting position
-                        $this.hide().after($placeholder);
+						$this.addClass("longnonsensicalclassnamethatnobodywouldeveruse");
 
                         // Find the depth of the deepest nested child and cache it for later
 						if (settings.maxDepth) {
                         	var maxChildDepth = 0;
 	                        $this.find(settings.nestable).each(function(index, child) {
 	                            var $child = $(child);
-	                            var childDepth = $child.parentsUntil($this).filter(settings.nestable).length;
+	                            var childDepth = $child.parentsUntil(".longnonsensicalclassnamethatnobodywouldeveruse").filter(settings.nestable).length + 1;
 	                            if (childDepth > maxChildDepth) {
 	                                maxChildDepth = childDepth;
 	                            }
 	                        });
 	                        $this.data("maxChildDepth", maxChildDepth);
+							console.log("Max Child Depth: " + maxChildDepth);
 						}
+						
+						$this.removeClass("longnonsensicalclassnamethatnobodywouldeveruse");
+						
+						
+						// Hide the original and initialize the placeholder on top of the starting position
+                        $this.hide().after($placeholder);
 
 						// Disable text selection
 						if (settings.disableSelect) {
