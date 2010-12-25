@@ -66,7 +66,6 @@ $.fn.nestedSortable = function(settings) {
 	                            }
 	                        });
 	                        $this.data("maxChildDepth", maxChildDepth);
-							console.log("Max Child Depth: " + maxChildDepth);
 						}
 						
 						$this.removeClass("longnonsensicalclassnamethatnobodywouldeveruse");
@@ -163,7 +162,8 @@ $.fn.nestedSortable = function(settings) {
                     stop: function(event, ui) {
 	
                         // Replace the placeholder with the original
-                        $placeholder.after($this.show()).remove();
+                        $placeholder.after($this.show());
+						$placeholder.remove();
 
 						// Re-enable text selection
 						if (settings.disableSelect) {
