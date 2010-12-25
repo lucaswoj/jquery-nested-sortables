@@ -105,7 +105,7 @@ $.fn.nestedSortable = function(settings) {
                                 return;
 
                             // Is the item being checked part of the helper or placeholder?
-                            if ($item.parents("." + settings.helperClass + " ." + settings.placeholderClass).length)
+                            if ($item.parents("." + settings.helperClass + " ." + settings.placeholderClass).length || $item[0] == $this[0])
                                 return;
 
                             // Does this item comply with max depth rules?
