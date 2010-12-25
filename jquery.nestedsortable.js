@@ -53,23 +53,27 @@ $.fn.nestedSortable = function(settings) {
                     // When dragging starts
                     start: function() {
 
-						$this.addClass("longnonsensicalclassnamethatnobodywouldeveruse");
-
                         // Find the depth of the deepest nested child and cache it for later
 						if (settings.maxDepth) {
                         	var maxChildDepth = 0;
 	                        $this.find(settings.nestable).each(function(index, child) {
+		
 	                            var $child = $(child);
-	                            var childDepth = $child.parentsUntil(".longnonsensicalclassnamethatnobodywouldeveruse").filter(settings.nestable).length + 1;
+	                            var childDepth = 0;
+	
+								$child.parents(settings.nestable).each(function(index, item) {
+									childDepth++;
+									return (item != $this[0]);
+								});
+								
 	                            if (childDepth > maxChildDepth) {
 	                                maxChildDepth = childDepth;
 	                            }
+	
 	                        });
+	
 	                        $this.data("maxChildDepth", maxChildDepth);
-						}
-						
-						$this.removeClass("longnonsensicalclassnamethatnobodywouldeveruse");
-						
+						}						
 						
 						// Hide the original and initialize the placeholder on top of the starting position
                         $this.hide().after($placeholder);
@@ -111,13 +115,19 @@ $.fn.nestedSortable = function(settings) {
                             if (itemOffset.left - settings.snapTolerance >= ui.position.left)
                                 return;
 
-                            // Is the item being checked part of the helper?
-                            if (ui.helper.find($item).length)
+                            // Is the item being checked part of the helper or placeholder?
+                            if ($item.parents("." + settings.helperClass + " ." + settings.placeholderClass).length)
                                 return;
 
                             // Does this item comply with max depth rules?
                             if (settings.maxDepth) {
-                                depth = $item.parentsUntil($root).filter(settings.container).length + maxChildDepth;
+	
+                                depth = maxChildDepth;
+								$item.parents(settings.container).each(function(index, item) {
+									depth++
+									return (item != $root[0]);
+								});
+
                                 if (depth > settings.maxDepth) {
                                     return;
                                 }
@@ -162,8 +172,7 @@ $.fn.nestedSortable = function(settings) {
                     stop: function(event, ui) {
 	
                         // Replace the placeholder with the original
-                        $placeholder.after($this.show());
-						$placeholder.remove();
+                        $placeholder.replaceWith($this.show()).remove();
 
 						// Re-enable text selection
 						if (settings.disableSelect) {
