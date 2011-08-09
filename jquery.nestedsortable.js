@@ -62,9 +62,7 @@ $.fn.nestedSortable = function(settings) {
 								maxChildDepth++;
 							}
 						}
-						
-						console.log("Max Child Depth: " + maxChildDepth);				
-						
+												
 						// Hide the original and initialize the placeholder on top of the starting position
                         $this.hide().after($placeholder);
 
